@@ -1,16 +1,29 @@
+<script setup>
+import { Link } from "@inertiajs/vue3";
+</script>
 <template>
     <div class="main-sidebar sidebar-style-2">
         <aside id="sidebar-wrapper">
-            <div class="sidebar-brand">
-                <a href="index.html">Stisla</a>
+            <div class="sidebar-brand pt-2 mb-4" style="line-height: 2rem">
+                <Link :href="route('dashboard')">
+                    Clinic <br />
+                    Management System
+                </Link>
             </div>
             <div class="sidebar-brand sidebar-brand-sm">
-                <a href="index.html">St</a>
+                <Link :href="route('dashboard')">CMS</Link>
             </div>
             <ul class="sidebar-menu">
-                <li class="{{ Request::is('dasboard') ? 'active' : '' }}">
-                    <a class="nav-link" href="{{ url('dasboard') }}"
-                        >Dashboard</a
+                <li :class="{ active: route().current('dashboard') }">
+                    <Link class="nav-link" :href="route('dashboard')"
+                        ><i class="fas fa-fire"></i>
+                        <span>Dashboard</span></Link
+                    >
+                </li>
+                <li :class="{ active: route().current('users.*') }">
+                    <Link class="nav-link" :href="route('users.index')"
+                        ><i class="fas fa-users"></i>
+                        <span>Manage User</span></Link
                     >
                 </li>
             </ul>

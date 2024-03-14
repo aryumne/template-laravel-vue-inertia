@@ -1,8 +1,9 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
 import BlankLayout from "../../Layouts/BlankLayout.vue";
 </script>
 <template>
+    <Head title="Forgot Password" />
     <BlankLayout>
         <div class="card card-primary">
             <div class="card-header">

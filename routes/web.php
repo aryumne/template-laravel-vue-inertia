@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Web\UserController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -24,6 +25,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/home', function () {
         return Inertia::render("Dashboard/Index");
     })->name('dashboard');
+
+    Route::resource('/users', UserController::class);
 });
 Route::middleware(['redirect.if.authenticated'])->group(function () {
     Route::inertia('/login', 'Auth/Login')->name('login');

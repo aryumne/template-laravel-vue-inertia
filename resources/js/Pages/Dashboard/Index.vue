@@ -1,15 +1,15 @@
 <script setup>
-import { Link } from "@inertiajs/vue3";
+import { Link, Head } from "@inertiajs/vue3";
 import MainLayout from "../../Layouts/MainLayout.vue";
+import SectionHeader from "../../Components/sections/SectionHeader.vue";
 </script>
 <template>
+    <Head title="Dashboard" />
+
     <MainLayout>
         <div class="main-content">
             <section class="section">
-                <div class="section-header">
-                    <h1>Dashboard</h1>
-                    <Link :href="route('login')"> Login</Link>
-                </div>
+                <SectionHeader title="Dashboard" />
                 <div class="row">
                     <div class="col-lg-3 col-md-6 col-sm-6 col-12">
                         <div class="card card-statistic-1">

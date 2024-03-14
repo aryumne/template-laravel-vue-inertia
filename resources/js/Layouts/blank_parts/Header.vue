@@ -1,10 +1,10 @@
 <template>
     <div class="login-brand">
         <img
-            src="../../../assets/img/stisla-fill.svg"
+            :src="'/assets/img/logo.png'"
             alt="logo"
             width="100"
-            class="shadow-light rounded-circle"
+            class="shadow-dark rounded-circle"
         />
     </div>
 </template>

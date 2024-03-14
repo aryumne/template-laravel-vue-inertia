@@ -1,17 +1,26 @@
 import "./bootstrap";
-import "../css/app.css";
-import "../assets/library/jquery/dist/jquery.min.js";
-import "../assets/library/bootstrap/dist/js/bootstrap.min.js";
-import "../assets/library/jquery.nicescroll/dist/jquery.nicescroll.min.js";
-// import "../assets/js/stisla.js";
-import "../assets/js/scripts.js";
-// import "../assets/js/custom.js";
-
 import { createApp, h } from "vue";
 import { createInertiaApp } from "@inertiajs/vue3";
 
 createInertiaApp({
     id: "app",
+    progress: {
+        // The delay after which the progress bar will appear, in milliseconds...
+        delay: 250,
+
+        // The color of the progress bar...
+        color: "#6777ef",
+
+        // Whether to include the default NProgress styles...
+        includeCSS: true,
+
+        // Whether the NProgress spinner will be shown...
+        showSpinner: false,
+    },
+    title: (title) =>
+        title != undefined && title != null && title != ""
+            ? `${title} - Clinic Management System`
+            : "Clinic Management System",
     resolve: (name) => {
         const pages = import.meta.glob("./Pages/**/*.vue", { eager: true });
         return pages[`./Pages/${name}.vue`];

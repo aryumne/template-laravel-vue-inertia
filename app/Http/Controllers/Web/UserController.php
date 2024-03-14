@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Web;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -12,15 +13,8 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $data = User::paginate(7);
+        return inertia('User/Index', ["data" => $data]);
     }
 
     /**
@@ -28,7 +22,27 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => ['required', 'max:50'],
+            'role' => ['required'],
+            'email' => ['required', 'max:50', 'unique:users,email'],
+            'phone' => ['required'],
+            'password' => ['required'],
+            'profile_pict' => ['required', 'file', 'mimes:jpg,bpm,jpeg,png']
+        ]);
+
+        if ($request->file('profile_pict')->isValid()) {
+            $path = $request->file('profile_pict')->store('profile-pictures');
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => $request->password,
+                'phone' => $request->phone,
+                'role' => $request->role,
+                'profile_pict' => $path
+            ]);
+        }
+        return to_route('users.index')->with('message', "User created successfully!");
     }
 
     /**
@@ -58,8 +72,9 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+        return to_route('users.index')->with('message', "User deleted successfully!");
     }
 }

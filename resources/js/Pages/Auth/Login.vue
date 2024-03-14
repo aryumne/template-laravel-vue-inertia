@@ -1,5 +1,5 @@
 <script setup>
-import { Link, useForm } from "@inertiajs/vue3";
+import { Link, useForm, Head } from "@inertiajs/vue3";
 import BlankLayout from "../../Layouts/BlankLayout.vue";
 const loginForm = useForm({
     email: null,
@@ -13,6 +13,7 @@ defineProps({
 });
 </script>
 <template>
+    <Head title="Login" />
     <BlankLayout>
         <div class="card card-primary">
             <div class="card-header">
