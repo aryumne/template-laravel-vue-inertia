@@ -30,8 +30,13 @@ const configSubmit = {
             closeButton.click(); // Trigger click event on close button
         }
     },
-    onError: (err) => {
-        console.error(err);
+    onError: (errors) => {
+        let msg = Object.values(errors)[0];
+        iziToast.error({
+            title: "Failed!!!",
+            message: msg,
+            position: "topRight",
+        });
     },
 };
 </script>
@@ -150,10 +155,13 @@ const configSubmit = {
                                     data.profile_pict = $event.target.files[0]
                                 "
                                 class="form-control"
-                                :class="{ 'is-invalid': errors?.phone }"
+                                :class="{ 'is-invalid': errors?.profile_pict }"
                             />
-                            <div v-if="errors?.phone" class="invalid-feedback">
-                                {{ errors?.phone }}
+                            <div
+                                v-if="errors?.profile_pict"
+                                class="invalid-feedback"
+                            >
+                                {{ errors?.profile_pict }}
                             </div>
                         </div>
                     </div>

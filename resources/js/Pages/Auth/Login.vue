@@ -11,6 +11,25 @@ defineProps({
         type: Object,
     },
 });
+
+const optionsSubmit = {
+    preserveScroll: true,
+    onSuccess: (res) => {
+        iziToast.info({
+            title: "Success!!!",
+            message: res.props.flash.message,
+            position: "topRight",
+        });
+    },
+    onError: (errors) => {
+        let msg = Object.values(errors)[0];
+        iziToast.error({
+            title: "Failed!!!",
+            message: msg,
+            position: "topRight",
+        });
+    },
+};
 </script>
 <template>
     <Head title="Login" />
@@ -21,7 +40,11 @@ defineProps({
             </div>
 
             <div class="card-body">
-                <form @submit.prevent="loginForm.post(route('login'))">
+                <form
+                    @submit.prevent="
+                        loginForm.post(route('login'), optionsSubmit)
+                    "
+                >
                     <div class="form-group">
                         <label for="email">Email</label>
                         <input

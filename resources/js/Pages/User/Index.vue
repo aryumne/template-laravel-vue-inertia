@@ -13,21 +13,31 @@ defineProps({
 });
 
 function deleteRow(id) {
-    if (confirm("Are you sure?")) {
-        router.delete(route("users.destroy", id), {
-            preserveScroll: true,
-            onSuccess: (res) => {
-                iziToast.info({
-                    title: "Success!!!",
-                    message: res.props.flash.message,
-                    position: "topRight",
-                });
-            },
-            onError: (err) => {
-                console.error(err);
-            },
-        });
-    }
+    router.delete(route("users.destroy", id), {
+        preserveScroll: true,
+        onBefore: () => confirm("Are you sure?"),
+        onSuccess: (res) => {
+            iziToast.info({
+                title: "Success!!!",
+                message: res.props.flash.message,
+                position: "topRight",
+            });
+        },
+        onError: (errors) => {
+            let msg = Object.values(errors)[0];
+            iziToast.error({
+                title: "Failed!!!",
+                message: msg,
+                position: "topRight",
+            });
+        },
+    });
+}
+
+function getSrcAvatar(path) {
+    let src = import.meta.env.VITE_APP_URL;
+    if (path !== null) return src + "/storage/" + path;
+    else return src + "/assets/img/avatar/avatar-1.png";
 }
 </script>
 <template>
@@ -91,7 +101,7 @@ function deleteRow(id) {
                                                 v-for="(dt, index) in data.data"
                                             >
                                                 <td>
-                                                    <div
+                                                    <!-- <div
                                                         class="custom-checkbox custom-control"
                                                     >
                                                         <input
@@ -106,7 +116,19 @@ function deleteRow(id) {
                                                             class="custom-control-label"
                                                             >&nbsp;</label
                                                         >
-                                                    </div>
+                                                    </div> -->
+                                                    <figure
+                                                        class="avatar avatar-sm mr-2"
+                                                    >
+                                                        <img
+                                                            :src="
+                                                                getSrcAvatar(
+                                                                    dt?.profile_pict
+                                                                )
+                                                            "
+                                                            alt="..."
+                                                        />
+                                                    </figure>
                                                 </td>
                                                 <td>{{ dt.name }}</td>
                                                 <td>{{ dt.email }}</td>
@@ -130,10 +152,15 @@ function deleteRow(id) {
                                                 <td
                                                     class="text-lg-center text-right gap-1"
                                                 >
-                                                    <a
-                                                        href="#"
+                                                    <Link
+                                                        :href="
+                                                            route(
+                                                                'users.edit',
+                                                                dt.id
+                                                            )
+                                                        "
                                                         class="btn btn-info mr-0 mr-lg-1 mb-1 mb-lg-0 btn-sm"
-                                                        >Edit</a
+                                                        >Edit</Link
                                                     >
                                                     <button
                                                         class="btn btn-danger btn-sm"

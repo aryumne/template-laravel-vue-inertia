@@ -23,7 +23,7 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => ['required', 'max:50'],
+            'name' => ['required'],
             'role' => ['required'],
             'email' => ['required', 'max:50', 'unique:users,email'],
             'phone' => ['required'],
@@ -56,17 +56,44 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(User $user)
     {
-        //
+        return inertia('User/Edit', compact('user'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, User $user)
     {
-        //
+
+        $rules = [
+            'name' => ['required'],
+            'role' => ['required'],
+            'phone' => ['required'],
+            'is_active' => ['required'],
+        ];
+        if ($request->email !== $user->email) {
+            $rules['email'] = ['required', 'max:50', 'unique:users,email'];
+        }
+
+        if ($request->hasFile('profile_pict')) {
+            $rules['profile_pict'] = ['required', 'file', 'mimes:jpg,bpm,jpeg,png'];
+        }
+        $request->validate($rules);
+
+        isset($request->name)   && $user->name  = $request->name;
+        isset($request->email)  && $user->email = $request->email;
+        isset($request->role)   && $user->role  = $request->role;
+        isset($request->phone)  && $user->phone = $request->phone;
+        isset($request->is_active) && $user->is_active = $request->is_active;
+
+        if ($request->hasFile('profile_pict') && $request->file('profile_pict')->isValid()) {
+            $path = $request->file('profile_pict')->store('profile-pictures');
+            $user->profile_pict = $path;
+        }
+        $user->save();
+        return back()->with('message', "User updated successfully!");
     }
 
     /**
