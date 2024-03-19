@@ -26,6 +26,12 @@ import { Link } from "@inertiajs/vue3";
                         <span>Manage User</span></Link
                     >
                 </li>
+                <li :class="{ active: route().current('doctors.*') }">
+                    <Link class="nav-link" :href="route('doctors.index')"
+                        ><i class="fas fa-users"></i>
+                        <span>Manage Doctors</span></Link
+                    >
+                </li>
             </ul>
 
             <div class="hide-sidebar-mini mt-4 mb-4 p-3">

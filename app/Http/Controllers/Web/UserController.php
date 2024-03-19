@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers\Web;
 
-use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Web\BaseController;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = User::paginate(7);
+        $data = User::paginate($this->defaultPaginate);
         return inertia('User/Index', ["data" => $data]);
     }
 
