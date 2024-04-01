@@ -39,6 +39,10 @@ const configSubmit = {
         });
     },
 };
+
+const generatePassword = () => {
+    data.password = Math.random().toString(36).slice(-8);
+};
 </script>
 <template>
     <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
@@ -127,14 +131,12 @@ const configSubmit = {
                                     class="form-control"
                                     v-model="data.password"
                                     :class="{ 'is-invalid': errors?.password }"
-                                    aria-label="Recipient's username"
-                                    aria-describedby="button-addon2"
                                 />
                                 <div class="input-group-append">
                                     <button
                                         class="btn btn-warning"
                                         type="button"
-                                        id="button-addon2"
+                                        @click="generatePassword"
                                     >
                                         Generate
                                     </button>

@@ -11,10 +11,20 @@ class UserController extends BaseController
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $data = User::paginate($this->defaultPaginate);
-        return inertia('User/Index', ["data" => $data]);
+        $search = $request->search;
+        $paginateValue = $request->has('entires') ? $request->integer('entires') : $this->defaultPaginate;
+        $data = User::query()->when($search, function ($query, string $search) {
+            $query->whereAny([
+                'name', 'email', 'phone', 'role'
+            ], 'LIKE', "%$search%");
+        })
+            ->paginate($paginateValue)
+            ->withQueryString(); // mengirim kembali value dari request seperti search
+
+        $filters = $request->only(['search']);
+        return inertia('User/Index', ["data" => $data, "filters" => $filters]);
     }
 
     /**
@@ -43,14 +53,6 @@ class UserController extends BaseController
             ]);
         }
         return to_route('users.index')->with('message', "User created successfully!");
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

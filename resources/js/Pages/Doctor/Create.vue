@@ -2,12 +2,15 @@
 import { useForm } from "@inertiajs/vue3";
 
 const data = useForm({
-    name: "",
-    email: "",
-    password: "",
-    specialist_id: "",
-    phone: "",
-    profile_pict: "",
+    doctor_name: "",
+    doctor_phone: null,
+    doctor_email: "",
+    doctor_address: "",
+    specialist_id: null,
+    sip: "",
+    id_ihs: "",
+    nik: "",
+    doctor_profile_pict: null,
 });
 
 defineProps({
@@ -46,7 +49,7 @@ const configSubmit = {
 <template>
     <div class="modal fade" tabindex="-1" role="dialog" id="exampleModal">
         <div
-            class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
+            class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable"
             role="document"
         >
             <div class="modal-content">
@@ -63,117 +66,198 @@ const configSubmit = {
                 </div>
                 <form
                     @submit.prevent="
-                        data.post(route('users.store'), configSubmit)
+                        data.post(route('doctors.store'), configSubmit)
                     "
                 >
                     <div class="modal-body">
-                        <div class="form-group">
-                            <label for="specialist_id">Spesialist</label>
-                            <select
-                                class="form-control"
-                                id="specialist_id"
-                                v-model="data.specialist_id"
-                            >
-                                <option
-                                    v-for="opt in specialists"
-                                    :value="opt.id"
+                        <div class="row">
+                            <div class="form-group col-12 col-md-6">
+                                <label for="specialist_id"
+                                    >Spesialist
+                                    <span class="text-danger">*</span></label
                                 >
-                                    {{ opt.specialist_name }}
-                                </option>
-                            </select>
-                            <div
-                                v-if="errors?.specialist_id"
-                                class="invalid-feedback"
-                            >
-                                {{ errors?.specialist_id }}
+                                <select
+                                    class="form-control"
+                                    id="specialist_id"
+                                    v-model="data.specialist_id"
+                                >
+                                    <option
+                                        v-for="opt in specialists"
+                                        :value="opt.id"
+                                    >
+                                        {{ opt.specialist_name }}
+                                    </option>
+                                </select>
+                                <div
+                                    v-if="errors?.specialist_id"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.specialist_id }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="name">Full name</label>
-                            <input
-                                type="text"
-                                class="form-control"
-                                v-model="data.name"
-                                :class="{ 'is-invalid': errors?.name }"
-                                tabindex="1"
-                                required
-                                autofocus
-                            />
-                            <div v-if="errors?.name" class="invalid-feedback">
-                                {{ errors?.name }}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email</label>
-                            <input
-                                type="email"
-                                class="form-control"
-                                v-model="data.email"
-                                :class="{ 'is-invalid': errors?.email }"
-                                tabindex="1"
-                                required
-                            />
-                            <div v-if="errors?.email" class="invalid-feedback">
-                                {{ errors?.email }}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone</label>
-                            <input
-                                type="number"
-                                class="form-control"
-                                v-model="data.phone"
-                                :class="{ 'is-invalid': errors?.phone }"
-                                tabindex="1"
-                                required
-                            />
-                            <div v-if="errors?.phone" class="invalid-feedback">
-                                {{ errors?.phone }}
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password">Password</label>
-                            <div class="input-group">
+                            <div class="form-group col-12 col-md-6">
+                                <label for="doctor_name"
+                                    >Doctor name
+                                    <span class="text-danger">*</span></label
+                                >
                                 <input
                                     type="text"
                                     class="form-control"
-                                    v-model="data.password"
-                                    :class="{ 'is-invalid': errors?.password }"
-                                    aria-label="Recipient's username"
-                                    aria-describedby="button-addon2"
+                                    v-model="data.doctor_name"
+                                    :class="{
+                                        'is-invalid': errors?.doctor_name,
+                                    }"
+                                    tabindex="1"
+                                    required
                                 />
-                                <div class="input-group-append">
-                                    <button
-                                        class="btn btn-warning"
-                                        type="button"
-                                        id="button-addon2"
-                                    >
-                                        Generate
-                                    </button>
+                                <div
+                                    v-if="errors?.doctor_name"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.doctor_name }}
                                 </div>
                             </div>
-                            <div
-                                v-if="errors?.password"
-                                class="invalid-feedback"
-                            >
-                                {{ errors?.password }}
+                            <div class="form-group col-12 col-md-6">
+                                <label for="email"
+                                    >Email
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="email"
+                                    class="form-control"
+                                    v-model="data.doctor_email"
+                                    :class="{
+                                        'is-invalid': errors?.doctor_email,
+                                    }"
+                                    tabindex="1"
+                                    required
+                                />
+                                <div
+                                    v-if="errors?.doctor_email"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.doctor_email }}
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="profile_pict">Profile Picture</label>
-                            <input
-                                type="file"
-                                @input="
-                                    data.profile_pict = $event.target.files[0]
-                                "
-                                class="form-control"
-                                :class="{ 'is-invalid': errors?.profile_pict }"
-                            />
-                            <div
-                                v-if="errors?.profile_pict"
-                                class="invalid-feedback"
-                            >
-                                {{ errors?.profile_pict }}
+                            <div class="form-group col-12 col-md-6">
+                                <label for="doctor_phone"
+                                    >Phone
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    v-model="data.doctor_phone"
+                                    :class="{
+                                        'is-invalid': errors?.doctor_phone,
+                                    }"
+                                    tabindex="1"
+                                    required
+                                />
+                                <div
+                                    v-if="errors?.doctor_phone"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.doctor_phone }}
+                                </div>
+                            </div>
+                            <div class="form-group col-12 col-md-6">
+                                <label for="sip"
+                                    >SIP
+                                    <span class="text-danger">*</span></label
+                                >
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="data.sip"
+                                    :class="{
+                                        'is-invalid': errors?.sip,
+                                    }"
+                                    tabindex="1"
+                                    required
+                                />
+                                <div
+                                    v-if="errors?.sip"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.sip }}
+                                </div>
+                            </div>
+                            <div class="form-group col-12 col-md-6">
+                                <label for="nik">NIK</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    v-model="data.nik"
+                                    :class="{
+                                        'is-invalid': errors?.nik,
+                                    }"
+                                    tabindex="1"
+                                />
+                                <div
+                                    v-if="errors?.nik"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.nik }}
+                                </div>
+                            </div>
+                            <div class="form-group col-12 col-md-6">
+                                <label for="id_ihs">ID IHS</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    v-model="data.id_ihs"
+                                    :class="{
+                                        'is-invalid': errors?.id_ihs,
+                                    }"
+                                    tabindex="1"
+                                />
+                                <div
+                                    v-if="errors?.id_ihs"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.id_ihs }}
+                                </div>
+                            </div>
+                            <div class="form-group col-12 col-md-6">
+                                <label for="profile_pict"
+                                    >Doctor Profile Picture</label
+                                >
+                                <input
+                                    type="file"
+                                    @input="
+                                        data.doctor_profile_pict =
+                                            $event.target.files[0]
+                                    "
+                                    class="form-control"
+                                    :class="{
+                                        'is-invalid':
+                                            errors?.doctor_profile_pict,
+                                    }"
+                                />
+                                <div
+                                    v-if="errors?.doctor_profile_pict"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.doctor_profile_pict }}
+                                </div>
+                            </div>
+
+                            <div class="form-group col-12">
+                                <label for="doctor_address"
+                                    >Doctor Address</label
+                                >
+                                <textarea
+                                    class="form-control"
+                                    v-model="data.doctor_address"
+                                    data-height="75"
+                                ></textarea>
+                                <div
+                                    v-if="errors?.doctor_address"
+                                    class="invalid-feedback"
+                                >
+                                    {{ errors?.doctor_address }}
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -1,19 +1,42 @@
 <script setup>
 import { Link, Head, router } from "@inertiajs/vue3";
+import { ref, watch } from "vue";
 import MainLayout from "../../Layouts/MainLayout.vue";
 import SectionHeader from "../../Components/sections/SectionHeader.vue";
 import Create from "./Create.vue";
 import { getSrcAvatar } from "../../Utils";
-defineProps({
+const props = defineProps({
     data: {
         type: Object,
     },
     specialists: {
         type: Object,
     },
+    filters: {
+        type: Object,
+    },
     errors: {
         type: Object,
     },
+});
+
+const search = ref(props.filters.search);
+const entires = ref(props.data.per_page);
+
+watch(search, (val) => {
+    router.get(
+        route("doctors.index"),
+        { search: val },
+        { preserveState: true }
+    );
+});
+
+watch(entires, (val) => {
+    console.log(val);
+    let currentParams = route().params;
+    currentParams.entires = val;
+    currentParams.page = 1;
+    router.get(route("doctors.index"), currentParams, { preserveState: true });
 });
 
 function deleteRow(id) {
@@ -63,6 +86,37 @@ function deleteRow(id) {
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
                                 <div class="card-body px-3 pt-3">
+                                    <div class="float-left">
+                                        <select
+                                            class="form-control py-0"
+                                            v-model="entires"
+                                        >
+                                            <option>5</option>
+                                            <option>10</option>
+                                            <option>25</option>
+                                            <option>50</option>
+                                            <option>100</option>
+                                        </select>
+                                    </div>
+                                    <div class="float-right">
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Search"
+                                                v-model="search"
+                                            />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary">
+                                                    <i
+                                                        class="fas fa-search"
+                                                    ></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix mb-3"></div>
                                     <div class="table-responsive">
                                         <table
                                             class="table-striped table-md table"
@@ -142,7 +196,7 @@ function deleteRow(id) {
                                                         :href="
                                                             route(
                                                                 'doctors.edit',
-                                                                dt.id
+                                                                dt
                                                             )
                                                         "
                                                         class="btn btn-info mr-0 mr-lg-1 mb-1 mb-lg-0 btn-sm"

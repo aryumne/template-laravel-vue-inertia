@@ -2,6 +2,7 @@
 import { Head, Link, useForm, router } from "@inertiajs/vue3";
 import MainLayout from "../../Layouts/MainLayout.vue";
 import SectionHeader from "../../Components/sections/SectionHeader.vue";
+import { getSrcAvatar } from "../../Utils";
 
 const props = defineProps({
     user: {
@@ -63,7 +64,53 @@ function saveChanges() {
                 <SectionHeader title="Edit User" />
                 <div class="section-body">
                     <div class="row d-flex justify-content-center">
-                        <div class="col-12 col-md-10 col-lg-8">
+                        <div class="col-12 col-md-4">
+                            <div class="card profile-widget">
+                                <div class="profile-widget-header">
+                                    <img
+                                        alt="image"
+                                        :src="getSrcAvatar(user?.profile_pict)"
+                                        class="rounded-circle profile-widget-picture"
+                                    />
+                                    <div class="profile-widget-items">
+                                        <div
+                                            class="profile-widget-item text-left ml-4"
+                                        >
+                                            <div
+                                                class="profile-widget-item-value mb-1"
+                                            >
+                                                {{ user?.name }}
+                                            </div>
+                                            <div
+                                                class="profile-widget-item-label"
+                                            >
+                                                {{ user?.role }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="profile-widget-description pb-0">
+                                    <div class="profile-widget-name">
+                                        {{ user?.email }}
+                                    </div>
+                                    <div class="profile-widget-name">
+                                        {{ user?.phone }}
+                                    </div>
+                                    <div class="mb-4">
+                                        <div
+                                            class="badge badge-success"
+                                            v-if="user?.is_active === 1"
+                                        >
+                                            Active
+                                        </div>
+                                        <div class="badge badge-danger" v-else>
+                                            Not Active
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-8">
                             <div class="card">
                                 <form @submit.prevent="saveChanges">
                                     <div class="card-body">
@@ -155,10 +202,11 @@ function saveChanges() {
                                                     type="radio"
                                                     v-model="data.is_active"
                                                     value="1"
+                                                    id="yes"
                                                 />
                                                 <label
                                                     class="form-check-label"
-                                                    for="inlineRadio1"
+                                                    for="yes"
                                                     >Yes</label
                                                 >
                                             </div>
@@ -170,10 +218,11 @@ function saveChanges() {
                                                     type="radio"
                                                     v-model="data.is_active"
                                                     value="0"
+                                                    id="no"
                                                 />
                                                 <label
                                                     class="form-check-label"
-                                                    for="inlineRadio2"
+                                                    for="no"
                                                     >No</label
                                                 >
                                             </div>

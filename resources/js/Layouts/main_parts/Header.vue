@@ -1,6 +1,6 @@
 <script setup>
 import { Link } from "@inertiajs/vue3";
-
+import { getSrcAvatar } from "../../Utils";
 const updateSidebarNiceScroll = () => {
     const interval = setInterval(() => {
         if (window.sidebar_nicescroll !== null) {
@@ -80,7 +80,6 @@ const toggleSidebarMini = (mini) => {
 };
 
 const toggleSidebar = () => {
-    
     const body = document.querySelector("body");
     const w = window.outerWidth;
 
@@ -128,11 +127,12 @@ const toggleSidebar = () => {
                     data-toggle="dropdown"
                     class="nav-link dropdown-toggle nav-link-lg nav-link-user"
                 >
-                    <img
-                        alt="image"
-                        :src="'/assets/img/avatar/avatar-1.png'"
-                        class="rounded-circle mr-1"
-                    />
+                    <figure class="avatar avatar-sm mr-1">
+                        <img
+                            :src="getSrcAvatar($page.props.user.profile_pict)"
+                            alt="foto-profile"
+                        />
+                    </figure>
                     <div class="d-sm-none d-lg-inline-block">
                         Hi, {{ $page.props.user.name }}
                     </div>
@@ -145,18 +145,12 @@ const toggleSidebar = () => {
                     >
                         <i class="far fa-user"></i> Profile
                     </a>
-                    <a
-                        href="features-activities.html"
-                        class="dropdown-item has-icon"
-                    >
-                        <i class="fas fa-bolt"></i> Activities
-                    </a>
-                    <a
+                    <!-- <a
                         href="features-settings.html"
                         class="dropdown-item has-icon"
                     >
                         <i class="fas fa-cog"></i> Settings
-                    </a>
+                    </a> -->
                     <div class="dropdown-divider"></div>
                     <Link
                         :href="route('logout')"

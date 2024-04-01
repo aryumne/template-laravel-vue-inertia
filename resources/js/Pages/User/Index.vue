@@ -3,13 +3,34 @@ import { Link, Head, router } from "@inertiajs/vue3";
 import MainLayout from "../../Layouts/MainLayout.vue";
 import SectionHeader from "../../Components/sections/SectionHeader.vue";
 import Create from "./Create.vue";
-defineProps({
+import { getSrcAvatar } from "../../Utils";
+import { ref, watch } from "vue";
+
+let props = defineProps({
     data: {
         type: Object,
     },
     errors: {
         type: Object,
     },
+    filters: {
+        type: Object,
+    },
+});
+
+const search = ref(props.filters.search);
+const entires = ref(props.data.per_page);
+
+watch(search, (val) => {
+    router.get(route("users.index"), { search: val }, { preserveState: true });
+});
+
+watch(entires, (val) => {
+    console.log(val);
+    let currentParams = route().params;
+    currentParams.entires = val;
+    currentParams.page = 1;
+    router.get(route("users.index"), currentParams, { preserveState: true });
 });
 
 function deleteRow(id) {
@@ -32,12 +53,6 @@ function deleteRow(id) {
             });
         },
     });
-}
-
-function getSrcAvatar(path) {
-    let src = import.meta.env.VITE_APP_URL;
-    if (path !== null) return src + "/storage/" + path;
-    else return src + "/assets/img/avatar/avatar-1.png";
 }
 </script>
 <template>
@@ -64,13 +79,44 @@ function getSrcAvatar(path) {
                     <div class="row">
                         <div class="col-12 col-md-12 col-lg-12">
                             <div class="card">
-                                <div class="card-body px-3 pt-3">
+                                <div class="card-body px-4 pt-3">
+                                    <div class="float-left">
+                                        <select
+                                            class="form-control py-0"
+                                            v-model="entires"
+                                        >
+                                            <option>5</option>
+                                            <option>10</option>
+                                            <option>25</option>
+                                            <option>50</option>
+                                            <option>100</option>
+                                        </select>
+                                    </div>
+                                    <div class="float-right">
+                                        <div class="input-group">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                placeholder="Search"
+                                                v-model="search"
+                                            />
+                                            <div class="input-group-append">
+                                                <button class="btn btn-primary">
+                                                    <i
+                                                        class="fas fa-search"
+                                                    ></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="clearfix mb-3"></div>
                                     <div class="table-responsive">
                                         <table
                                             class="table-striped table-md table"
                                         >
                                             <tr>
-                                                <th>
+                                                <th class="pl-4">
                                                     <div
                                                         class="custom-checkbox custom-control"
                                                     >
@@ -150,20 +196,20 @@ function getSrcAvatar(path) {
                                                     </div>
                                                 </td>
                                                 <td
-                                                    class="text-lg-center text-right gap-1"
+                                                    class="text-lg-center text-right"
                                                 >
                                                     <Link
                                                         :href="
                                                             route(
                                                                 'users.edit',
-                                                                dt.id
+                                                                dt
                                                             )
                                                         "
-                                                        class="btn btn-info mr-0 mr-lg-1 mb-1 mb-lg-0 btn-sm"
+                                                        class="btn btn-info btn-sm"
                                                         >Edit</Link
                                                     >
                                                     <button
-                                                        class="btn btn-danger btn-sm"
+                                                        class="btn btn-danger ml-1 btn-sm"
                                                         @click="
                                                             deleteRow(dt.id)
                                                         "
